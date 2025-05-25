@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "818469287221",
+    "project_id": "marketalchemyv5",
+    "storage_bucket": "marketalchemyv5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818469287221:android:a747bfb4e0d3fc6850887c",
+        "android_client_info": {
+          "package_name": "com.marketalchemy.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8na3U6G-aXSlXrXA194zbmJAiv3bg-eI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

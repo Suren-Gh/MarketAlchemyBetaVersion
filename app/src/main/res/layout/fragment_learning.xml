@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header with search bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Learning Center"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Learn to trade and invest wisely"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/cardBackgroundColor"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_search"
+                        android:tint="?attr/colorOnSecondary" />
+
+                    <EditText
+                        android:id="@+id/editSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@null"
+                        android:hint="Search for topics..."
+                        android:textColorHint="?attr/colorOnSecondary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <!-- Featured courses section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Featured Courses"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/featuredCoursesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
+
+        <!-- Featured courses horizontal cards (hardcoded for preview) -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Course 1 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCryptoBasics"
+                    android:layout_width="280dp"
+                    android:layout_height="220dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    android:foreground="@drawable/card_ripple_effect">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp">
+                            
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/gradient_blue" />
+                                
+                            <ImageView
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/bitcoin_icon"
+                                android:alpha="0.9" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Cryptocurrency Basics"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Learn Bitcoin fundamentals and blockchain technology"
+                                android:textColor="?attr/colorOnSecondary"
+                                android:textSize="14sp"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Course 2 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardTradingStrategies"
+                    android:layout_width="280dp"
+                    android:layout_height="220dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    android:foreground="@drawable/card_ripple_effect">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp">
+                            
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/gradient_green" />
+                                
+                            <ImageView
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:layout_gravity="center"
+                                android:src="@android:drawable/ic_menu_sort_by_size"
+                                android:tint="@android:color/white"
+                                android:alpha="0.9" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Trading Strategies"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Master key trading strategies used by professional traders"
+                                android:textColor="?attr/colorOnSecondary"
+                                android:textSize="14sp"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Course 3 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRiskManagement"
+                    android:layout_width="280dp"
+                    android:layout_height="220dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    android:foreground="@drawable/card_ripple_effect">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp">
+                            
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/gradient_red" />
+                                
+                            <ImageView
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:layout_gravity="center"
+                                android:src="@android:drawable/ic_dialog_alert"
+                                android:tint="@android:color/white"
+                                android:alpha="0.9" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Risk Management"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Learn to protect your capital with effective risk management"
+                                android:textColor="?attr/colorOnSecondary"
+                                android:textSize="14sp"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Popular Articles Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Popular Articles"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Bitcoin Specific Article -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardBitcoinIntro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="#F7931A" />
+                        
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/bitcoin_icon"
+                        android:alpha="1.0" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bitcoin: Digital Gold"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Understand why Bitcoin is considered digital gold and how to invest safely"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Article 1 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardMarketCycles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_blue" />
+                        
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_menu_recent_history"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Understanding Market Cycles"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Learn how to identify different phases of market cycles"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Article 2 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTechnicalAnalysis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_green" />
+                        
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Technical Analysis Fundamentals"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Master chart patterns and indicators for better trading decisions"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Article 3 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardPortfolio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_red" />
+                        
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_menu_share"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Creating a Diversified Portfolio"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Strategies for balancing risk and reward in your crypto investments"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Daily Tips Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp"
+            android:text="Daily Trading Tips"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/ic_dialog_info"
+                        android:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Today's Tip"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textDailyTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Always set stop-loss orders to protect your capital from significant losses."
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/buttonNextTip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Next Tip"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Video Tutorials Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Video Tutorials"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Video 1 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardVideo1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="90dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_dark" />
+                        
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_media_play"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Introduction to Cryptocurrency Trading"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Video 2 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardVideo2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="90dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_dark" />
+                        
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_media_play"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Reading Candlestick Charts"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Video 3 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardVideo3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/card_ripple_effect">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="90dp">
+                    
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/gradient_dark" />
+                        
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_media_play"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Advanced Trading Strategies"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView> 

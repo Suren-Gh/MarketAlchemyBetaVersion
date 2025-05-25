@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <group android:scaleX="3"
+           android:scaleY="3"
+           android:translateX="30"
+           android:translateY="30">
+        
+        <!-- Alchemical flask outline -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M8,6h8v4c0,2.5 2,4 2,6c0,2.5 -2.5,4 -6,4s-6,-1.5 -6,-4c0,-2 2,-3.5 2,-6V6z"
+            android:strokeWidth="1.2"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    
+        <!-- Liquid in flask -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M8.5,10c0,0 0,1 0,2.2c0,1.8 -1.5,2.8 -1.5,4.8c0,2 2,3 5,3s5,-1 5,-3c0,-2 -1.5,-3 -1.5,-4.8c0,-1.2 0,-2.2 0,-2.2h-7z"
+            android:fillAlpha="0.3" />
+    
+        <!-- Chart line -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M9,12l2,-2l1.5,1l2.5,-3"
+            android:strokeWidth="1.2"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    
+        <!-- Flask top -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M8,6h8v1h-8z"
+            android:fillAlpha="0.4" />
+    </group>
+</vector> 

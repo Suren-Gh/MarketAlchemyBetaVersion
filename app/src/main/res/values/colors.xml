@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#673AB7</color> <!-- Deep Purple -->
+    <color name="primary_dark">#512DA8</color>
+    <color name="primary_light">#B39DFF</color>
+    
+    <!-- Secondary Colors -->
+    <color name="secondary">#00E676</color> <!-- Light Green -->
+    <color name="secondary_dark">#00C853</color>
+    <color name="secondary_light">#69F0AE</color>
+    
+    <!-- Background Colors -->
+    <color name="background_dark">#121212</color>
+    <color name="background_light">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary_dark">#E0E0E0</color>
+    <color name="text_secondary_dark">#B3FFFFFF</color>
+    <color name="text_primary_light">#212121</color>
+    <color name="text_secondary_light">#757575</color>
+    
+    <!-- Card Colors -->
+    <color name="card_background_dark">#1E1E1E</color>
+    <color name="card_background_light">#FFFFFF</color>
+    
+    <!-- Chart Colors -->
+    <color name="chart_increasing">@color/secondary</color>
+    <color name="chart_decreasing">#FF4081</color>
+    
+    <!-- Common Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    
+    <!-- Launcher Icon -->
+    <color name="ic_launcher_background">@color/primary</color>
+</resources>

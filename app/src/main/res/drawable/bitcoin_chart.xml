@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="800dp"
+    android:height="400dp"
+    android:viewportWidth="800"
+    android:viewportHeight="400">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#0D1117"
+        android:pathData="M0,0h800v400h-800z"/>
+    
+    <!-- Grid lines - horizontal -->
+    <path
+        android:strokeColor="#1E2D3D"
+        android:strokeWidth="1"
+        android:pathData="M0,80h800M0,160h800M0,240h800M0,320h800"/>
+    
+    <!-- Grid lines - vertical -->
+    <path
+        android:strokeColor="#1E2D3D"
+        android:strokeWidth="1"
+        android:pathData="M100,0v400M200,0v400M300,0v400M400,0v400M500,0v400M600,0v400M700,0v400"/>
+    
+    <!-- Price labels -->
+    <path
+        android:fillColor="#4F5D6A"
+        android:pathData="M10,80 h-5 v-5 h40 v10 h-35z"/>
+    <path
+        android:fillColor="#4F5D6A"
+        android:pathData="M10,160 h-5 v-5 h40 v10 h-35z"/>
+    <path
+        android:fillColor="#4F5D6A"
+        android:pathData="M10,240 h-5 v-5 h40 v10 h-35z"/>
+    <path
+        android:fillColor="#4F5D6A"
+        android:pathData="M10,320 h-5 v-5 h40 v10 h-35z"/>
+    
+    <!-- Bitcoin price chart line -->
+    <path
+        android:strokeColor="#F7931A"
+        android:strokeWidth="3"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:pathData="M50,300 C100,280 150,285 200,270 C250,255 270,200 300,190 C350,170 370,220 400,210 C450,195 480,150 500,140 C550,120 580,170 600,160 C650,140 680,180 700,170 C720,162 740,145 750,130"/>
+    
+    <!-- Gradient fill under the chart line -->
+    <path
+        android:fillColor="#33F7931A"
+        android:pathData="M50,300 C100,280 150,285 200,270 C250,255 270,200 300,190 C350,170 370,220 400,210 C450,195 480,150 500,140 C550,120 580,170 600,160 C650,140 680,180 700,170 C720,162 740,145 750,130 L750,400 L50,400 Z"/>
+    
+    <!-- Volume bars -->
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M60,350h20v30h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M100,360h20v20h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M140,355h20v25h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M180,365h20v15h-20z"/>
+    <path
+        android:fillColor="#601A2B"
+        android:pathData="M220,370h20v10h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M260,350h20v30h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M300,345h20v35h-20z"/>
+    <path
+        android:fillColor="#601A2B"
+        android:pathData="M340,360h20v20h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M380,350h20v30h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M420,340h20v40h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M460,350h20v30h-20z"/>
+    <path
+        android:fillColor="#601A2B"
+        android:pathData="M500,365h20v15h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M540,355h20v25h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M580,345h20v35h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M620,350h20v30h-20z"/>
+    <path
+        android:fillColor="#601A2B"
+        android:pathData="M660,370h20v10h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M700,340h20v40h-20z"/>
+    <path
+        android:fillColor="#1A5E33"
+        android:pathData="M740,345h20v35h-20z"/>
+    
+    <!-- Current price indicator -->
+    <path
+        android:fillColor="#F7931A"
+        android:pathData="M750,130m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"/>
+</vector> 

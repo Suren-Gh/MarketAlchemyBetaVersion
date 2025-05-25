@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+            
+            <ImageView
+                android:id="@+id/imageBack"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:tint="?attr/colorOnPrimary"
+                android:padding="4dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bitcoin (BTC)"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+                
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bitcoin_icon" />
+        </LinearLayout>
+        
+        <!-- Price info -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Price"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="14sp" />
+                    
+                <TextView
+                    android:id="@+id/textPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$29,341.58"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+                    
+                <TextView
+                    android:id="@+id/textPriceChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+3.42% (24h)"
+                    android:textColor="#4CAF50"
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        
+        <!-- Price chart -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Price Chart (Last 30 Days)"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+                
+                <ImageView
+                    android:id="@+id/imageChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:src="@drawable/bitcoin_chart"
+                    android:scaleType="fitXY"
+                    android:background="#0D1117" />
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1D"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1W"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1M"
+                        android:textColor="#F7931A"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3M"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1Y"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:background="@drawable/card_ripple_effect"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        
+        <!-- About Bitcoin -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="About Bitcoin"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bitcoin is a decentralized digital currency that can be transferred on the peer-to-peer bitcoin network. Bitcoin transactions are verified by network nodes through cryptography and recorded in a public distributed ledger called a blockchain."
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp" />
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="The cryptocurrency was invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto. The currency began use in 2009 when its implementation was released as open-source software."
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView> 

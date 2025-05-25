@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#162B3D"
+        android:pathData="M12,12m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0" />
+
+    <!-- Alchemical flask outline -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8,6h8v4c0,2.5 2,4 2,6c0,2.5 -2.5,4 -6,4s-6,-1.5 -6,-4c0,-2 2,-3.5 2,-6V6z"
+        android:strokeWidth="1.2"
+        android:strokeColor="#FFD700"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Liquid in flask -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M8.5,10c0,0 0,1 0,2.2c0,1.8 -1.5,2.8 -1.5,4.8c0,2 2,3 5,3s5,-1 5,-3c0,-2 -1.5,-3 -1.5,-4.8c0,-1.2 0,-2.2 0,-2.2h-7z"
+        android:fillAlpha="0.8" />
+
+    <!-- Chart line -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M9,12l2,-2l1.5,1l2.5,-3"
+        android:strokeWidth="1.2"
+        android:strokeColor="#FFD700"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Circles to represent bubbles in the liquid -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,13m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0"
+        android:fillAlpha="0.7" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M13,15m-0.7,0a0.7,0.7 0,1 1,1.4 0a0.7,0.7 0,1 1,-1.4 0"
+        android:fillAlpha="0.7" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10.5,16.5m-0.6,0a0.6,0.6 0,1 1,1.2 0a0.6,0.6 0,1 1,-1.2 0"
+        android:fillAlpha="0.7" />
+
+    <!-- Flask top -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M8,6h8v1h-8z"
+        android:fillAlpha="0.8" />
+</vector> 

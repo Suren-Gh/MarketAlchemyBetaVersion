@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="chartGridColor" format="color" />
+    <attr name="chartIncreasing" format="color" />
+    <attr name="chartDecreasing" format="color" />
+    <attr name="colorBackground" format="color" />
+    <attr name="cardBackgroundColor" format="color" />
+</resources> 
