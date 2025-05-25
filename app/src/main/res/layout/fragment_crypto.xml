@@ -117,8 +117,9 @@
                         android:layout_weight="1"
                         android:text="Cryptocurrency"
                         android:textColor="?attr/colorOnPrimary"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium" />
                         
                     <Spinner
                         android:id="@+id/spinnerCrypto"
@@ -146,6 +147,16 @@
                     android:text="+0.00%"
                     android:textColor="?attr/chartIncreasing"
                     android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvHoldings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="No holdings"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"

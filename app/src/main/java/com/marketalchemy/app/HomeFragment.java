@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.ProgressBar;
 import android.content.res.ColorStateList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.cardview.widget.CardView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,8 +32,6 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.io.IOException;
-import org.json.JSONException;
 
 public class HomeFragment extends Fragment {
 
@@ -45,7 +43,7 @@ public class HomeFragment extends Fragment {
     private TextView tvBitcoinPrice;
     private TextView tvWalletBalance;
     private ProgressBar progressBar;
-    private LinearLayout cryptoAssetsContainer;
+    private TableLayout cryptoTableLayout;
     private ImageView ivNotifications;
     private FirebaseAuth mAuth;
     private VirtualPortfolio portfolio;
@@ -53,6 +51,10 @@ public class HomeFragment extends Fragment {
     private final Handler updateHandler = new Handler(Looper.getMainLooper());
     private final BybitUpdateClient updateClient = BybitUpdateClient.getInstance();
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    
+    // Supported cryptocurrencies
+    private final String[] supportedCryptos = {"BTC", "ETH", "SOL", "BNB", "XRP", "ADA"};
+    private final String[] cryptoNames = {"Bitcoin", "Ethereum", "Solana", "Binance Coin", "Ripple", "Cardano"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +85,7 @@ public class HomeFragment extends Fragment {
         tvBitcoinHoldings = view.findViewById(R.id.tvBitcoinHoldings);
         tvBitcoinValue = view.findViewById(R.id.tvBitcoinValue);
         tvWalletBalance = view.findViewById(R.id.tvWalletBalance);
-        cryptoAssetsContainer = view.findViewById(R.id.cryptoAssetsContainer);
+        cryptoTableLayout = view.findViewById(R.id.cryptoTableLayout);
         
         // Set crypto-themed colors
         int cryptoGreen = Color.parseColor("#4CAF50");
@@ -100,174 +102,93 @@ public class HomeFragment extends Fragment {
             }
         });
         
-        // Set up Bybit update client to track Bitcoin prices
-        updateClient.trackSymbol("BTC", new BybitUpdateClient.PriceUpdateListener() {
-            @Override
-            public void onPriceUpdate(String symbol, double price, double change) {
-                updateHandler.post(() -> updateBitcoinDisplay(price));
-            }
-        });
-        
-        // Update UI with user and portfolio data
+        // Update user info
         updateUserInfo();
+        
+        // Update portfolio display
         updatePortfolioInfo();
+        
+        // Initial display for Bitcoin (will be updated with real data)
+        updateBitcoinDisplay(0.0);
+        
+        // Setup real-time price updates
+        setupPriceUpdates();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        // Update portfolio data when returning to this fragment
-        updatePortfolioInfo();
-        
-        // Start Bitcoin price updates
+        // Start price updates when fragment is resumed
         startPriceUpdates();
+        // Update portfolio display
+        updatePortfolioInfo();
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        // Stop price updates when fragment is not visible
+        // Stop price updates when fragment is paused
         stopPriceUpdates();
     }
     
-    private void startPriceUpdates() {
-        // Set up regular updates for crypto prices (every 1 second)
-        updateHandler.postDelayed(new Runnable() {
+    /**
+     * Set up price update listener for Bitcoin
+     */
+    private void setupPriceUpdates() {
+        // Set up price update listener for Bitcoin
+        updateClient.trackSymbol("BTC", new BybitUpdateClient.PriceUpdateListener() {
             @Override
-            public void run() {
-                try {
-                    // Update all supported cryptocurrencies
-                    updateCryptoHoldings();
-                    updatePortfolioInfo(); // Refresh all values
-                    
-                    // Schedule next update
-                    updateHandler.postDelayed(this, 1000); // Real-time 1-second updates
-                } catch (Exception e) {
-                    Log.e("HomeFragment", "Error updating prices: " + e.getMessage());
+            public void onPriceUpdate(String symbol, double price, double change) {
+                if (isAdded() && getContext() != null) {
+                    if (symbol.equals("BTC")) {
+                        updateBitcoinPrice(price);
+                    }
                 }
-            }
-        }, 500); // Initial delay of 0.5 second
-    }
-    
-    private void stopPriceUpdates() {
-        // Remove all pending updates
-        updateHandler.removeCallbacksAndMessages(null);
-    }
-    
-    private void updateUserInfo() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String displayName = currentUser.getDisplayName();
-            if (displayName != null && !displayName.isEmpty()) {
-                // Extract username if available
-                if (displayName.contains("(") && displayName.contains(")")) {
-                    String username = displayName.substring(
-                            displayName.indexOf("(") + 1, 
-                            displayName.indexOf(")")
-                    );
-                    tvUsername.setText("@" + username);
-                } else {
-                    tvUsername.setText(displayName);
-                }
-            }
-        }
-    }
-    
-    private void updatePortfolioInfo() {
-        // Show loading state
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        
-        // Get balance (this is safe to do on main thread)
-        double walletBalance = portfolio.getBalance();
-        
-        // Update wallet balance immediately (this doesn't need network calls)
-        tvWalletBalance.setText(currencyFormat.format(walletBalance));
-        
-        // Use cached values for immediate display
-        double cachedTotalValue = portfolio.getTotalPortfolioValue(); // Uses cached values
-        tvPortfolioValue.setText(currencyFormat.format(cachedTotalValue));
-        
-        // Then get accurate values asynchronously
-        portfolio.getTotalPortfolioValueAsync(totalValue -> {
-            if (!isAdded() || getContext() == null) {
-                return; // Fragment not attached, avoid crashes
-            }
-            
-            // Update portfolio value with fresh data
-            tvPortfolioValue.setText(currencyFormat.format(totalValue));
-            
-            // Update profit/loss information if available
-            if (tvProfitLoss != null) {
-                double profitLoss = portfolio.getTotalProfitLoss();
-                double profitLossPercent = 0;
-                if (totalValue > walletBalance) {
-                    profitLossPercent = (profitLoss / (totalValue - walletBalance)) * 100;
-                }
-                
-                String profitLossText = String.format("%s (%.1f%%)", 
-                        currencyFormat.format(profitLoss), 
-                        profitLossPercent);
-                
-                tvProfitLoss.setText(profitLossText);
-                
-                // Set crypto-themed colors
-                int cryptoGreen = Color.parseColor("#4CAF50");
-                int cryptoRed = Color.parseColor("#F44336");
-                
-                // Set color based on profit/loss
-                if (profitLoss >= 0) {
-                    tvProfitLoss.setTextColor(cryptoGreen);
-                } else {
-                    tvProfitLoss.setTextColor(cryptoRed);
-                }
-            }
-            
-            // Update Bitcoin price asynchronously
-            updateBitcoinPrice();
-            
-            // Hide loading state
-            if (progressBar != null) {
-                progressBar.setVisibility(View.GONE);
             }
         });
-    }
-    
-    private void updateBitcoinPrice() {
-        if (!isAdded() || getContext() == null) {
-            return; // Fragment not attached, avoid crashes
-        }
-        
-        // Then get fresh data asynchronously
-        BybitApiClient.getInstance().getCurrentPriceAsync("BTC", new BybitApiClient.PriceCallback() {
-            @Override
-            public void onPrice(double price, double change) {
-                if (!isAdded() || getContext() == null) {
-                    return; // Fragment not attached, avoid crashes
-                }
-                
-                if (tvBitcoinPrice != null) {
-                    tvBitcoinPrice.setText(currencyFormat.format(price));
-                }
-                
-                // Update Bitcoin holdings with new price
-                updateBitcoinDisplay(price);
-            }
-            
-            @Override
-            public void onError(Exception e) {
-                Log.e("HomeFragment", "Error getting Bitcoin price: " + e.getMessage());
-            }
-        });
-        
-        // Update all crypto holdings display
-        updateCryptoHoldings();
     }
     
     /**
-     * Updates the Bitcoin display with the current price
+     * Updates the Bitcoin price display
+     * @param price Current Bitcoin price
      */
+    private void updateBitcoinPrice(double price) {
+        if (isAdded() && getContext() != null) {
+            tvBitcoinPrice.setText(currencyFormat.format(price));
+            updateBitcoinDisplay(price);
+        }
+    }
+    
+    /**
+     * Updates the portfolio information
+     */
+    private void updatePortfolioInfo() {
+        double balance = portfolio.getBalance();
+        double totalInvestmentValue = portfolio.getInvestmentsValue();
+        double portfolioValue = balance + totalInvestmentValue;
+        
+        // Update the wallet balance
+        tvWalletBalance.setText(currencyFormat.format(balance));
+        
+        // Update the total portfolio value
+        tvPortfolioValue.setText(currencyFormat.format(portfolioValue));
+        
+        // Calculate profit/loss - For simplicity, we'll just show total portfolio value
+        double initialBalance = 10000.0; // Assuming starting with $10,000
+        double profitLoss = portfolioValue - initialBalance;
+        
+        // Format with + or - sign
+        String profitLossText = String.format(Locale.US, "%s%.2f%%", 
+                profitLoss >= 0 ? "+" : "", (profitLoss / initialBalance) * 100);
+        
+        // Set the profit/loss text
+        tvProfitLoss.setText(profitLossText);
+        
+        // Set the color (green for profit, red for loss)
+        tvProfitLoss.setTextColor(profitLoss >= 0 ? 
+                Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+    }
+    
     private void updateBitcoinDisplay(double price) {
         // Get Bitcoin investment if it exists
         Investment bitcoinInvestment = portfolio.getInvestment("BTC");
@@ -289,62 +210,66 @@ public class HomeFragment extends Fragment {
     }
     
     /**
-     * Updates the crypto holdings display in the UI
+     * Updates the crypto holdings display in the UI as a clean table
      */
     private void updateCryptoHoldings() {
-        // Clear existing views
-        if (cryptoAssetsContainer != null) {
-            cryptoAssetsContainer.removeAllViews();
+        // Clear existing rows (except header)
+        if (cryptoTableLayout != null) {
+            // Keep header row and remove all others
+            int childCount = cryptoTableLayout.getChildCount();
+            if (childCount > 1) {
+                cryptoTableLayout.removeViews(1, childCount - 1);
+            }
         }
         
-        // Get all investments
-        List<Investment> investments = portfolio.getInvestments();
-        
-        // Define crypto names mapping
-        Map<String, String> cryptoNames = new HashMap<>();
-        cryptoNames.put("BTC", "Bitcoin");
-        cryptoNames.put("ETH", "Ethereum");
-        cryptoNames.put("SOL", "Solana");
-        cryptoNames.put("BNB", "Binance Coin");
-        cryptoNames.put("XRP", "Ripple");
-        cryptoNames.put("ADA", "Cardano");
-        
         try {
-            // For each investment, create a card and add it to the container
-            for (Investment investment : investments) {
-                String cryptoId = investment.getCryptoId();
-                double quantity = investment.getQuantity();
+            // Create a row for each supported cryptocurrency
+            for (int i = 0; i < supportedCryptos.length; i++) {
+                final String symbol = supportedCryptos[i];
+                final String name = cryptoNames[i];
                 
-                // Skip if quantity is too small
-                if (quantity < 0.00000001) continue;
+                // Get investment data if it exists
+                Investment investment = portfolio.getInvestment(symbol);
+                final double quantity = investment != null ? investment.getQuantity() : 0.0;
                 
-                // Get crypto name and symbol
-                String cryptoName = cryptoNames.getOrDefault(cryptoId, cryptoId);
+                // Create table row
+                TableRow row = new TableRow(requireContext());
+                row.setLayoutParams(new TableLayout.LayoutParams(
+                        TableLayout.LayoutParams.MATCH_PARENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT));
                 
-                // Get current price asynchronously
-                BybitApiClient.getInstance().getCurrentPriceAsync(cryptoId, new BybitApiClient.PriceCallback() {
-                    @Override
-                    public void onPrice(double price, double change) {
-                        if (!isAdded() || getContext() == null) return;
-                        
-                        double value = quantity * price;
-                        
-                        // Create crypto holding card
-                        View cardView = createCryptoCard(cryptoName, cryptoId, quantity, price, value);
-                        
-                        // Add to UI on main thread
-                        updateHandler.post(() -> {
-                            if (cryptoAssetsContainer != null && isAdded()) {
-                                cryptoAssetsContainer.addView(cardView);
-                            }
-                        });
-                    }
-                    
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("HomeFragment", "Error getting price for " + cryptoId + ": " + e.getMessage());
-                    }
-                });
+                // Cryptocurrency name cell
+                TextView nameCell = new TextView(requireContext());
+                nameCell.setLayoutParams(new TableRow.LayoutParams(
+                        0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                nameCell.setText(name + " (" + symbol + ")");
+                nameCell.setTextColor(Color.WHITE);
+                nameCell.setTextSize(16);
+                nameCell.setPadding(0, 12, 0, 12);
+                row.addView(nameCell);
+                
+                // Holdings cell
+                TextView holdingsCell = new TextView(requireContext());
+                holdingsCell.setLayoutParams(new TableRow.LayoutParams(
+                        0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                holdingsCell.setText(String.format(Locale.US, "%.8f %s", quantity, symbol));
+                holdingsCell.setGravity(android.view.Gravity.END);
+                holdingsCell.setTextColor(quantity > 0 ? Color.parseColor("#4CAF50") : Color.WHITE);
+                holdingsCell.setTextSize(16);
+                holdingsCell.setPadding(0, 12, 0, 12);
+                row.addView(holdingsCell);
+                
+                // Add row to table
+                cryptoTableLayout.addView(row);
+                
+                // Add divider
+                if (i < supportedCryptos.length - 1) {
+                    View divider = new View(requireContext());
+                    divider.setLayoutParams(new TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.MATCH_PARENT, 1));
+                    divider.setBackgroundColor(Color.parseColor("#333333"));
+                    cryptoTableLayout.addView(divider);
+                }
             }
         } catch (Exception e) {
             // Handle error
@@ -352,67 +277,46 @@ public class HomeFragment extends Fragment {
         }
     }
     
-    /**
-     * Creates a card view for a crypto holding
-     */
-    private View createCryptoCard(String cryptoName, String symbol, double quantity, double price, double value) {
-        // Create card layout
-        CardView cardView = new CardView(requireContext());
-        cardView.setCardBackgroundColor(Color.parseColor("#1E1E1E"));
-        cardView.setRadius(16);
-        cardView.setCardElevation(4);
-        
-        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        cardParams.setMargins(16, 8, 16, 8);
-        cardView.setLayoutParams(cardParams);
-        
-        // Create content layout
-        LinearLayout contentLayout = new LinearLayout(requireContext());
-        contentLayout.setOrientation(LinearLayout.VERTICAL);
-        contentLayout.setPadding(24, 16, 24, 16);
-        
-        // Crypto name and symbol
-        TextView tvCryptoName = new TextView(requireContext());
-        tvCryptoName.setText(cryptoName + " (" + symbol + ")");
-        tvCryptoName.setTextSize(18);
-        tvCryptoName.setTextColor(Color.WHITE);
-        contentLayout.addView(tvCryptoName);
-        
-        // Holdings layout (quantity and value)
-        LinearLayout holdingsLayout = new LinearLayout(requireContext());
-        holdingsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        
-        // Quantity
-        TextView tvQuantity = new TextView(requireContext());
-        tvQuantity.setText(String.format(Locale.US, "%.8f %s", quantity, symbol.toUpperCase()));
-        tvQuantity.setTextSize(16);
-        tvQuantity.setTextColor(Color.parseColor("#4CAF50"));
-        LinearLayout.LayoutParams quantityParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-        tvQuantity.setLayoutParams(quantityParams);
-        holdingsLayout.addView(tvQuantity);
-        
-        // Value
-        TextView tvValue = new TextView(requireContext());
-        tvValue.setText(currencyFormat.format(value));
-        tvValue.setTextSize(16);
-        tvValue.setTextColor(Color.WHITE);
-        tvValue.setGravity(android.view.Gravity.END);
-        holdingsLayout.addView(tvValue);
-        
-        contentLayout.addView(holdingsLayout);
-        
-        // Price
-        TextView tvPrice = new TextView(requireContext());
-        tvPrice.setText("Price: " + currencyFormat.format(price));
-        tvPrice.setTextSize(14);
-        tvPrice.setTextColor(Color.LTGRAY);
-        contentLayout.addView(tvPrice);
-        
-        cardView.addView(contentLayout);
-        return cardView;
+    private void startPriceUpdates() {
+        // Set up regular updates for crypto prices (every 1 second)
+        updateHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Update all supported cryptocurrencies
+                    updateCryptoHoldings();
+                    updatePortfolioInfo(); // Refresh all values
+                    
+                    // Schedule next update
+                    updateHandler.postDelayed(this, 1000); // Real-time 1-second updates
+                } catch (Exception e) {
+                    Log.e("HomeFragment", "Error updating prices: " + e.getMessage());
+                }
+            }
+        }, 500); // Initial delay of 0.5 second
     }
-} 
+
+    private void stopPriceUpdates() {
+        // Remove all pending updates
+        updateHandler.removeCallbacksAndMessages(null);
+    }
+
+    private void updateUserInfo() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String displayName = currentUser.getDisplayName();
+            if (displayName != null && !displayName.isEmpty()) {
+                // Extract username if available
+                if (displayName.contains("(") && displayName.contains(")")) {
+                    String username = displayName.substring(
+                            displayName.indexOf("(") + 1, 
+                            displayName.indexOf(")")
+                    );
+                    tvUsername.setText("@" + username);
+                } else {
+                    tvUsername.setText(displayName);
+                }
+            }
+        }
+    }
+}

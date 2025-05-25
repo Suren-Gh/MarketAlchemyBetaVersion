@@ -86,7 +86,7 @@ public class CryptoFragment extends Fragment {
     private static final String PREFS_NAME = "MarketAlchemyPrefs";
     private static final String KEY_TRANSACTION_HISTORY = "transaction_history";
     
-    private CoinGeckoUpdateClient updateClient;
+    private BybitUpdateClient updateClient;
     
     // Handler for periodic updates
     private Handler updateHandler = new Handler(Looper.getMainLooper());
@@ -145,8 +145,8 @@ public class CryptoFragment extends Fragment {
         progressBar.setIndeterminateTintList(ColorStateList.valueOf(Color.parseColor("#FFD700")));
         progressBar.setVisibility(View.VISIBLE);
         
-        // Initialize CoinGecko update client
-        updateClient = CoinGeckoUpdateClient.getInstance();
+        // Initialize Bybit update client for real-time price updates
+        updateClient = BybitUpdateClient.getInstance();
         
         // Set up price update listener for Bitcoin
         setupPeriodicUpdates();
@@ -188,6 +188,11 @@ public class CryptoFragment extends Fragment {
         if (updateHandler != null && updateRunnable != null) {
             updateHandler.removeCallbacks(updateRunnable);
         }
+        
+        // Stop tracking all symbols in Bybit client
+        if (updateClient != null) {
+            updateClient.untrackAllSymbols();
+        }
     }
     
     /**
@@ -223,10 +228,10 @@ public class CryptoFragment extends Fragment {
     }
     
     /**
-     * Updates the portfolio display with the current values from VirtualPortfolio
+     * Updates the portfolio display with current balance and portfolio value
      */
     private void updatePortfolioDisplay() {
-        // Get current values from portfolio
+        // Update portfolio display
         double balance = portfolio.getBalance();
         double totalValue = portfolio.getTotalPortfolioValue();
         double investmentsValue = portfolio.getInvestmentsValue();
@@ -234,14 +239,35 @@ public class CryptoFragment extends Fragment {
         // Update UI
         tvVirtualBalance.setText(currencyFormat.format(balance));
         tvPortfolioValue.setText("Portfolio Value: " + currencyFormat.format(totalValue));
-        
+    }
+    
+    /**
+     * Updates the holdings display for a specific cryptocurrency
+     * @param cryptoId The cryptocurrency ID
+     * @param currentPrice The current price of the cryptocurrency
+     */
+    private void updateHoldingsDisplay(String cryptoId, double currentPrice) {
         // Update holdings for current crypto if we own any
-        if (portfolio.hasInvestment(currentCryptoId)) {
-            Investment investment = portfolio.getInvestment(currentCryptoId);
+        if (portfolio.hasInvestment(cryptoId)) {
+            Investment investment = portfolio.getInvestment(cryptoId);
             if (investment != null) {
                 double quantity = investment.getQuantity();
-                String quantityStr = String.format(Locale.US, "Holdings: %.8f %s", quantity, currentCryptoId);
-                showToast(quantityStr, Toast.LENGTH_SHORT);
+                String quantityStr = String.format(Locale.US, "Holdings: %.8f %s ($%.2f)", 
+                                                 quantity, cryptoId, quantity * currentPrice);
+                
+                // Update UI instead of showing toast
+                TextView holdingsView = getView().findViewById(R.id.tvHoldings);
+                if (holdingsView != null) {
+                    holdingsView.setText(quantityStr);
+                    holdingsView.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            // No holdings
+            TextView holdingsView = getView().findViewById(R.id.tvHoldings);
+            if (holdingsView != null) {
+                holdingsView.setText("No holdings");
+                holdingsView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -251,12 +277,18 @@ public class CryptoFragment extends Fragment {
         updateRunnable = new Runnable() {
             @Override
             public void run() {
-                fetchCryptoData();
-                updatePortfolioDisplay(); // Update portfolio values
-                updateHandler.postDelayed(this, 1000); // Update every second
+                // This will be handled by the Bybit update client callbacks now
+                // Just update the portfolio display with current values
+                updatePortfolioDisplay();
+                
+                // Rerun this every second to keep portfolio values current
+                updateHandler.postDelayed(this, 1000);
             }
         };
         updateHandler.post(updateRunnable);
+        
+        // Initial fetch to populate data
+        fetchCryptoData();
     }
     
     private void setupCryptoSpinner() {
@@ -279,12 +311,17 @@ public class CryptoFragment extends Fragment {
                     titleView.setText(cryptoNames[position] + " (" + supportedCryptos[position] + ")");
                 }
                 
-                // Set up price update listener for the selected cryptocurrency using CoinGeckoUpdateClient
+                // Set up price update listener for the selected cryptocurrency using BybitUpdateClient
                 String symbol = supportedCryptos[position];
-                updateClient.trackCoin(symbol, new CoinGeckoUpdateClient.PriceUpdateListener() {
+                // First untrack all symbols to prevent multiple callbacks
+                updateClient.untrackAllSymbols();
+                
+                // Start tracking the newly selected symbol
+                updateClient.trackSymbol(symbol, new BybitUpdateClient.PriceUpdateListener() {
                     @Override
-                    public void onPriceUpdate(String symbol, double price, double change) {
-                        if (isAdded() && getContext() != null) {
+                    public void onPriceUpdate(String updatedSymbol, double price, double change) {
+                        if (isAdded() && getContext() != null && updatedSymbol.equals(symbol)) {
+                            // Only update if this is for our currently selected cryptocurrency
                             updatePriceDisplay(price, change);
                         }
                     }
@@ -555,78 +592,94 @@ public class CryptoFragment extends Fragment {
     private void fetchCryptoData() {
         showLoading(true);
         
-        // Get cryptocurrency data asynchronously
-        String currentCrypto = getCurrentCryptoId(); // Default is "BTC"
-        
-        CoinGeckoApiClient.getInstance().getCurrentPriceAsync(currentCrypto, new CoinGeckoApiClient.PriceCallback() {
+        // We need to fetch the data on a background thread since getCurrentPrice is synchronous
+        executorService.execute(new Runnable() {
             @Override
-            public void onPrice(double price) {
-                if (!isAdded() || getContext() == null) {
-                    return; // Fragment not attached, avoid crashes
+            public void run() {
+                try {
+                    // Get the current price from BybitApiClient
+                    final double price = BybitApiClient.getInstance().getCurrentPrice(currentCryptoId);
+                    
+                    // Get the 24h change from BybitApiClient (or 0 if not available)
+                    final double change = BybitApiClient.getInstance().getCachedChange(currentCryptoId) != null ?
+                            BybitApiClient.getInstance().getCachedChange(currentCryptoId) : 0.0;
+                    
+                    // Update UI on the main thread
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isAdded() && getContext() != null) {
+                                updatePriceDisplay(price, change);
+                                showLoading(false);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    // Handle errors on the main thread
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isAdded() && getContext() != null) {
+                                Log.e("CryptoFragment", "Error fetching price: " + e.getMessage());
+                                showToast("Error fetching price data", Toast.LENGTH_SHORT);
+                                showLoading(false);
+                            }
+                        }
+                    });
                 }
-                
-                // For now, we'll assume a 0% change since CoinGeckoApiClient.PriceCallback
-                // doesn't provide the change percentage in this simple price call
-                updatePriceDisplay(price, 0.0);
-                showLoading(false);
-            }
-            
-            @Override
-            public void onError(Exception e) {
-                if (!isAdded() || getContext() == null) {
-                    return; // Fragment not attached, avoid crashes
-                }
-                
-                Log.e("CryptoFragment", "Error fetching data: " + e.getMessage());
-                showLoading(false);
-                
-                // Show error toast
-                showToast("Error fetching price data. Please try again.", Toast.LENGTH_SHORT);
             }
         });
     }
     
     private void updatePriceDisplay(double price, double change) {
-        // Check if fragment is attached to context to prevent crashes
+        // Only update if this is for our current cryptocurrency
         if (!isAdded() || getContext() == null) {
-            Log.d("CryptoFragment", "updatePriceDisplay: Fragment not attached to context");
             return;
         }
         
-        try {
-            String formattedPrice = currencyFormat.format(price);
-            animateTextChange(tvPrice, formattedPrice);
-            
-            String changeText = String.format(Locale.US, "%.2f%%", change);
-            
-            // Set crypto-themed colors for price changes
-            int cryptoGreen = Color.parseColor("#4CAF50");
-            int cryptoRed = Color.parseColor("#F44336");
-            
-            if (change >= 0) {
-                tvChange.setTextColor(cryptoGreen);
-                tvChange.setText("+" + changeText); // Add plus sign for positive changes
-            } else {
-                tvChange.setTextColor(cryptoRed);
-                tvChange.setText(changeText);
-            }
-            
-            showLoading(false);
-        } catch (Exception e) {
-            Log.e("CryptoFragment", "Error updating price display: " + e.getMessage());
-        }
+        // Use NumberFormat for currency display
+        String formattedPrice = currencyFormat.format(price);
+        tvPrice.setText(formattedPrice);
+        
+        // Format the 24h change
+        String changeFormat = change >= 0 ? "+%.2f%%" : "%.2f%%";
+        String formattedChange = String.format(Locale.US, changeFormat, change);
+        tvChange.setText(formattedChange);
+        
+        // Set color based on positive or negative change
+        int color = change >= 0 ? Color.parseColor("#4CAF50") : Color.parseColor("#F44336");
+        tvChange.setTextColor(color);
+        
+        // Animate price changes to make them more noticeable
+        animatePriceChange(price);
+        
+        // Also update holdings display for this cryptocurrency
+        updateHoldingsDisplay(currentCryptoId, price);
+        showLoading(false);
+    }
+    
+    /**
+     * Animates price changes to make them more noticeable
+     * @param newPrice The new price to animate to
+     */
+    private void animatePriceChange(final double newPrice) {
+        // Get the current price text
+        String currentText = tvPrice.getText().toString();
+        
+        // Use the animateTextChange method to update the price text
+        animateTextChange(tvPrice, currencyFormat.format(newPrice));
     }
     
     private void animateTextChange(final TextView textView, final String newText) {
         ValueAnimator fadeOut = ValueAnimator.ofFloat(1.0f, 0.5f);
-            fadeOut.setDuration(150);
+        fadeOut.setDuration(150);
         fadeOut.addUpdateListener(animator -> textView.setAlpha((float) animator.getAnimatedValue()));
         fadeOut.addListener(new AnimatorListenerAdapter() {
-                @Override
+            @Override
             public void onAnimationEnd(Animator animation) {
-                    textView.setText(newText);
+                textView.setText(newText);
                 ValueAnimator fadeIn = ValueAnimator.ofFloat(0.5f, 1.0f);
-                    fadeIn.setDuration(150);
+                fadeIn.setDuration(150);
                 fadeIn.addUpdateListener(animator -> textView.setAlpha((float) animator.getAnimatedValue()));
                 fadeIn.start();
             }
