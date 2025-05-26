@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background gradient -->
+    <item>
+        <shape>
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="#222222"
+                android:centerColor="#222222"
+                android:endColor="#222222" />
+        </shape>
+    </item>
+    
+    <!-- Bottom glowing line representing chart support level -->
+    <item android:bottom="30dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="#22B6FF00" />
+        </shape>
+    </item>
+    
+    <!-- Chart area glow -->
+    <item>
+        <shape>
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="#00333333"
+                android:centerColor="#33B6FF00"
+                android:endColor="#00333333" />
+        </shape>
+    </item>
+    
+    <!-- Horizontal grid lines -->
+    <item android:top="20dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="#11FFFFFF" />
+        </shape>
+    </item>
+    
+    <item android:top="60dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="#11FFFFFF" />
+        </shape>
+    </item>
+    
+    <item android:top="100dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="#11FFFFFF" />
+        </shape>
+    </item>
+    
+    <item android:top="140dp">
+        <shape>
+            <size android:height="1dp" />
+            <solid android:color="#11FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

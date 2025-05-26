@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:shape="rectangle">
+    <!-- Gradient background -->
+    <gradient
+        android:type="linear"
+        android:angle="315"
+        android:startColor="@color/gradient_start"
+        android:centerColor="@color/background_medium"
+        android:endColor="@color/gradient_end" />
+        
+    <!-- Optional grid pattern using lines rather than bitmap -->
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/secondary_dark"
+        android:dashWidth="1dp"
+        android:dashGap="150dp" />
+</shape>

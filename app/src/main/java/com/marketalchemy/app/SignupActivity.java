@@ -41,6 +41,11 @@ public class SignupActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        
+        // Ensure user is signed out when they reach signup screen
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
+        }
 
         // Initialize views
         etFullName = findViewById(R.id.etFullName);

@@ -111,7 +111,8 @@ public class LearningFragment extends Fragment {
     }
     
     private void openBitcoinArticle() {
-        BitcoinDetailFragment.navigate(this);
+        // Pass Bitcoin as the default cryptocurrency for the learning section
+        BitcoinDetailFragment.navigate(this, "BTC", "Bitcoin");
     }
     
     private void openArticle(String articleTitle) {

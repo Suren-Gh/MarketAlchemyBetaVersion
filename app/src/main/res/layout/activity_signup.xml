@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0B2447"
+    android:background="#0A0A0A"
     android:padding="24dp">
 
     <ScrollView
@@ -26,8 +26,7 @@
                 android:layout_height="80dp"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="Market Alchemy Logo"
-                android:src="@drawable/ic_launcher_foreground"
-                android:tint="#FFD700" />
+                android:src="@drawable/market_alchemy_logo" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -36,7 +35,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:text="CREATE ACCOUNT"
-                android:textColor="#FFD700"
+                android:textColor="#B6FF00"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -45,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:textColorHint="#AAAAAA"
-                app:boxBackgroundColor="#162B3D"
-                app:boxStrokeColor="#19376D">
+                app:boxBackgroundColor="#141414"
+                app:boxStrokeColor="#00FF7F">
 
                 <EditText
                     android:id="@+id/etFullName"
@@ -63,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:textColorHint="#AAAAAA"
-                app:boxBackgroundColor="#162B3D"
-                app:boxStrokeColor="#19376D">
+                app:boxBackgroundColor="#141414"
+                app:boxStrokeColor="#00FF7F">
 
                 <EditText
                     android:id="@+id/etUsername"
@@ -81,8 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:textColorHint="#AAAAAA"
-                app:boxBackgroundColor="#162B3D"
-                app:boxStrokeColor="#19376D">
+                app:boxBackgroundColor="#141414"
+                app:boxStrokeColor="#00FF7F">
 
                 <EditText
                     android:id="@+id/etEmail"
@@ -99,10 +98,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:textColorHint="#AAAAAA"
-                app:boxBackgroundColor="#162B3D"
-                app:boxStrokeColor="#19376D"
+                app:boxBackgroundColor="#141414"
+                app:boxStrokeColor="#00FF7F"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="#AAAAAA">
+                app:passwordToggleTint="#00FF7F">
 
                 <EditText
                     android:id="@+id/etPassword"
@@ -119,10 +118,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:textColorHint="#AAAAAA"
-                app:boxBackgroundColor="#162B3D"
-                app:boxStrokeColor="#19376D"
+                app:boxBackgroundColor="#141414"
+                app:boxStrokeColor="#00FF7F"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="#AAAAAA">
+                app:passwordToggleTint="#00FF7F">
 
                 <EditText
                     android:id="@+id/etConfirmPassword"
@@ -139,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:buttonTint="#FFD700"
+                android:buttonTint="#00FF7F"
                 android:text="I agree to the Terms of Service and Privacy Policy"
                 android:textColor="#AAAAAA" />
 
@@ -148,9 +147,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="24dp"
-                android:backgroundTint="#FFD700"
+                android:backgroundTint="#B6FF00"
                 android:text="SIGN UP"
-                android:textColor="#0B2447"
+                android:textColor="#0A0A0A"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -172,10 +171,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log In"
-                    android:textColor="#FFD700"
+                    android:textColor="#00FF7F"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</RelativeLayout> 
+</RelativeLayout>

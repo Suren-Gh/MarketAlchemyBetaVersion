@@ -4,13 +4,14 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorSecondaryVariant">@color/secondary_dark</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:windowBackground">@drawable/background_gradient_grid</item>
         <!-- Background colors -->
         <item name="colorBackground">@color/background_dark</item>
         <item name="cardBackgroundColor">@color/card_background_dark</item>
@@ -18,13 +19,19 @@
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
         <!-- Chart colors -->
-        <item name="chartGridColor">@color/primary_light</item>
+        <item name="chartGridColor">@color/chart_grid</item>
         <item name="chartIncreasing">@color/chart_increasing</item>
         <item name="chartDecreasing">@color/chart_decreasing</item>
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/Widget.MarketAlchemy.Button</item>
+        <!-- Card styles -->
+        <item name="materialCardViewStyle">@style/Widget.MarketAlchemy.CardView</item>
     </style>
 
     <style name="Theme.MarketAlchemyBetaVersion50" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Using the main theme -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="android:windowBackground">@drawable/background_gradient_grid</item>
     </style>
 </resources>

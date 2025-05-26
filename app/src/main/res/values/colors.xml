@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary Colors -->
-    <color name="primary">#673AB7</color> <!-- Deep Purple -->
-    <color name="primary_dark">#512DA8</color>
-    <color name="primary_light">#B39DFF</color>
+    <color name="primary">#B6FF00</color> <!-- Neon lime green -->
+    <color name="primary_dark">#8ACC00</color>
+    <color name="primary_light">#D8FF99</color>
     
     <!-- Secondary Colors -->
-    <color name="secondary">#00E676</color> <!-- Light Green -->
-    <color name="secondary_dark">#00C853</color>
-    <color name="secondary_light">#69F0AE</color>
+    <color name="secondary">#00FF7F</color> <!-- Emerald/spring green -->
+    <color name="secondary_dark">#00CC66</color>
+    <color name="secondary_light">#7DFFD4</color>
     
     <!-- Background Colors -->
-    <color name="background_dark">#121212</color>
+    <color name="background_dark">#0A0A0A</color> <!-- Deep black -->
+    <color name="background_medium">#002200</color> <!-- Deep green -->
+    <color name="background_accent">#003300</color> <!-- Deep green accent -->
     <color name="background_light">#FFFFFF</color>
     
     <!-- Text Colors -->
-    <color name="text_primary_dark">#E0E0E0</color>
-    <color name="text_secondary_dark">#B3FFFFFF</color>
-    <color name="text_primary_light">#212121</color>
-    <color name="text_secondary_light">#757575</color>
+    <color name="text_primary_dark">#FFFFFF</color> <!-- Pure white -->
+    <color name="text_secondary_dark">#CCCCCC</color> <!-- Light gray -->
+    <color name="text_primary_light">#0A0A0A</color> <!-- Almost black -->
+    <color name="text_secondary_light">#424242</color> <!-- Dark gray -->
     
     <!-- Card Colors -->
-    <color name="card_background_dark">#1E1E1E</color>
+    <color name="card_background_dark">#0A0A0A</color> <!-- Transparent black for glassmorphism -->
     <color name="card_background_light">#FFFFFF</color>
+    <color name="card_glow">#00FF0033</color> <!-- Green glow with alpha -->
+    
+    <!-- Button Colors -->
+    <color name="button_start">#7FFF00</color> <!-- Chartreuse green -->
+    <color name="button_end">#00FF7F</color> <!-- Spring green -->
+    <color name="button_glow">#00FF0044</color> <!-- Button glow with alpha -->
     
     <!-- Chart Colors -->
-    <color name="chart_increasing">@color/secondary</color>
-    <color name="chart_decreasing">#FF4081</color>
+    <color name="chart_increasing">#00FF7F</color> <!-- Spring green -->
+    <color name="chart_decreasing">#FF4081</color> <!-- Pink -->
+    <color name="chart_grid">#003300</color> <!-- Deep green for grid lines -->
+    
+    <!-- Accent Colors -->
+    <color name="accent">#8A2BE2</color> <!-- Blue-violet accent -->
+    
+    <!-- Glow Colors -->
+    <color name="glow_green">#00FF00</color> <!-- Pure green glow -->
+    <color name="glow_white">#FFFFFF99</color> <!-- Soft white glow with alpha -->
     
     <!-- Common Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     
     <!-- Launcher Icon -->
-    <color name="ic_launcher_background">@color/primary</color>
+    <color name="ic_launcher_background">#0A0A0A</color> <!-- Deep black -->
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#0A0A0A</color> <!-- Black start -->
+    <color name="gradient_end">#003300</color> <!-- Deep green end -->
 </resources>

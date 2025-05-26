@@ -56,11 +56,9 @@ import android.widget.Spinner;
 
 public class CryptoFragment extends Fragment {
 
-    private TextView tvPrice, tvChange, tvVirtualBalance, tvPortfolioValue;
+    private TextView tvPrice, tvChange;
     private ProgressBar progressBar;
     private Button buyButton, sellButton;
-    private Button addMoneyButton;
-    private Button setMoneyButton;
     private EditText quantityInput;
     private Spinner spinnerCrypto;
     
@@ -108,61 +106,79 @@ public class CryptoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
-        // Initialize SharedPreferences and portfolio
-        prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        portfolio = new VirtualPortfolio(requireContext());
-        
-        // Initialize the currency format explicitly to ensure $ symbol
-        currencyFormat.setCurrency(Currency.getInstance("USD"));
-        
-        // Initialize UI components
-        progressBar = view.findViewById(R.id.progressBar);
-        tvPrice = view.findViewById(R.id.tvBitcoinPrice);
-        tvChange = view.findViewById(R.id.tvBitcoinChange);
-        
-        // Initialize portfolio views
-        tvVirtualBalance = view.findViewById(R.id.tvVirtualBalance);
-        tvPortfolioValue = view.findViewById(R.id.tvPortfolioValue);
-        
-        // Initialize trading controls
-        quantityInput = view.findViewById(R.id.quantityInput);
-        buyButton = view.findViewById(R.id.buyButton);
-        sellButton = view.findViewById(R.id.sellButton);
-        addMoneyButton = view.findViewById(R.id.addMoneyButton);
-        setMoneyButton = view.findViewById(R.id.setMoneyButton);
-        
-        // Initialize cryptocurrency spinner
-        spinnerCrypto = view.findViewById(R.id.spinnerCrypto);
-        setupCryptoSpinner();
-        
-        // Set up button click listeners
-        buyButton.setOnClickListener(v -> handleBuy());
-        sellButton.setOnClickListener(v -> handleSell());
-        addMoneyButton.setOnClickListener(v -> handleAddMoney());
-        setMoneyButton.setOnClickListener(v -> handleSetMoney());
-        
-        // Make sure loading indicator is visible
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(Color.parseColor("#FFD700")));
-        progressBar.setVisibility(View.VISIBLE);
-        
-        // Initialize Bybit update client for real-time price updates
-        updateClient = BybitUpdateClient.getInstance();
-        
-        // Set up price update listener for Bitcoin
-        setupPeriodicUpdates();
-        
-        // Initial UI title is set via the spinner selection
-        
-        // Set crypto theme colors
-        int cryptoGreen = Color.parseColor("#4CAF50");
-        buyButton.setBackgroundTintList(ColorStateList.valueOf(cryptoGreen));
-        addMoneyButton.setBackgroundTintList(ColorStateList.valueOf(cryptoGreen));
-        
-        // Initialize portfolio display
-        updatePortfolioDisplay();
-        
-        Log.d("CryptoFragment", "Connected to Bybit API for real-time price updates");
-        showToast("Connected to live crypto market", Toast.LENGTH_SHORT);
+        try {
+            // Initialize main handler for UI thread operations if not already done
+            if (mainHandler == null) {
+                mainHandler = new Handler(Looper.getMainLooper());
+            }
+            
+            // Initialize SharedPreferences and portfolio
+            prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            portfolio = new VirtualPortfolio(requireContext());
+            
+            // Initialize the currency format explicitly to ensure $ symbol
+            currencyFormat.setCurrency(Currency.getInstance("USD"));
+            
+            // Initialize UI components
+            progressBar = view.findViewById(R.id.progressBar);
+            tvPrice = view.findViewById(R.id.tvBitcoinPrice);
+            tvChange = view.findViewById(R.id.tvBitcoinChange);
+            
+            // Initialize trading controls
+            quantityInput = view.findViewById(R.id.quantityInput);
+            buyButton = view.findViewById(R.id.buyButton);
+            sellButton = view.findViewById(R.id.sellButton);
+            
+            // Initialize cryptocurrency spinner
+            spinnerCrypto = view.findViewById(R.id.spinnerCrypto);
+            setupCryptoSpinner();
+            
+            // Set up button click listeners
+            buyButton.setOnClickListener(v -> handleBuy());
+            sellButton.setOnClickListener(v -> handleSell());
+            
+            // Set up click listener for price section to navigate to details
+            View priceSectionClickable = view.findViewById(R.id.priceSectionClickable);
+            if (priceSectionClickable != null) {
+                priceSectionClickable.setOnClickListener(v -> {
+                    // Get the current selected cryptocurrency
+                    int position = spinnerCrypto.getSelectedItemPosition();
+                    String symbol = supportedCryptos[position];
+                    String name = cryptoNames[position];
+                    
+                    // Navigate to the detail fragment with the selected cryptocurrency
+                    BitcoinDetailFragment.navigate(this, symbol, name);
+                });
+            }
+            
+            // Make sure loading indicator is visible
+            if (progressBar != null) {
+                progressBar.setIndeterminateTintList(ColorStateList.valueOf(Color.parseColor("#FFD700")));
+                progressBar.setVisibility(View.VISIBLE);
+            }
+            
+            // Initialize Bybit update client for real-time price updates
+            updateClient = BybitUpdateClient.getInstance();
+            
+            // Set up price update listener for Bitcoin
+            setupPeriodicUpdates();
+            
+            // Initial UI title is set via the spinner selection
+            
+            // Set crypto theme colors
+            int cryptoGreen = Color.parseColor("#4CAF50");
+            if (buyButton != null) {
+                buyButton.setBackgroundTintList(ColorStateList.valueOf(cryptoGreen));
+            }
+            
+            // Initialize portfolio display
+            updatePortfolioDisplay();
+            
+            Log.d("CryptoFragment", "Connected to Bybit API for real-time price updates");
+            showToast("Connected to live crypto market", Toast.LENGTH_SHORT);
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error in onViewCreated: " + e.getMessage());
+        }
     }
     
     @Override
@@ -201,7 +217,9 @@ public class CryptoFragment extends Fragment {
      * @param duration Toast duration
      */
     private void showToast(final String message, final int duration) {
+        // First check if we're attached to a context
         if (getActivity() == null || !isAdded()) {
+            Log.d("CryptoFragment", "Cannot show toast: fragment not attached");
             return;
         }
         
@@ -209,21 +227,30 @@ public class CryptoFragment extends Fragment {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             // We're on the main thread, show toast directly
             try {
-                Toast.makeText(requireContext(), message, duration).show();
+                Context context = getContext();
+                if (context != null) {
+                    Toast.makeText(context, message, duration).show();
+                }
             } catch (Exception e) {
                 Log.e("CryptoFragment", "Error showing toast: " + e.getMessage());
             }
         } else {
             // We're on a background thread, post to main thread
-            mainHandler.post(() -> {
-                try {
-                    if (getActivity() != null && isAdded()) {
-                        Toast.makeText(requireContext(), message, duration).show();
+            if (mainHandler != null) {
+                mainHandler.post(() -> {
+                    try {
+                        // Check again after we've been posted to the main thread
+                        if (getActivity() != null && isAdded()) {
+                            Context context = getContext();
+                            if (context != null) {
+                                Toast.makeText(context, message, duration).show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.e("CryptoFragment", "Error showing toast on main thread: " + e.getMessage());
                     }
-                } catch (Exception e) {
-                    Log.e("CryptoFragment", "Error showing toast on main thread: " + e.getMessage());
-                }
-            });
+                });
+            }
         }
     }
     
@@ -231,14 +258,15 @@ public class CryptoFragment extends Fragment {
      * Updates the portfolio display with current balance and portfolio value
      */
     private void updatePortfolioDisplay() {
-        // Update portfolio display
+        // Portfolio display elements have been removed
+        // This method is kept for compatibility with existing code
+        
+        // Update data in portfolio model
         double balance = portfolio.getBalance();
         double totalValue = portfolio.getTotalPortfolioValue();
         double investmentsValue = portfolio.getInvestmentsValue();
         
-        // Update UI
-        tvVirtualBalance.setText(currencyFormat.format(balance));
-        tvPortfolioValue.setText("Portfolio Value: " + currencyFormat.format(totalValue));
+        // No UI updates needed since portfolio section was removed
     }
     
     /**
@@ -247,28 +275,37 @@ public class CryptoFragment extends Fragment {
      * @param currentPrice The current price of the cryptocurrency
      */
     private void updateHoldingsDisplay(String cryptoId, double currentPrice) {
-        // Update holdings for current crypto if we own any
-        if (portfolio.hasInvestment(cryptoId)) {
-            Investment investment = portfolio.getInvestment(cryptoId);
-            if (investment != null) {
-                double quantity = investment.getQuantity();
-                String quantityStr = String.format(Locale.US, "Holdings: %.8f %s ($%.2f)", 
-                                                 quantity, cryptoId, quantity * currentPrice);
-                
-                // Update UI instead of showing toast
+        if (!isAdded() || getContext() == null || getView() == null) {
+            Log.d("CryptoFragment", "Cannot update holdings display: fragment not attached");
+            return;
+        }
+        
+        try {
+            // Update holdings for current crypto if we own any
+            if (portfolio != null && portfolio.hasInvestment(cryptoId)) {
+                Investment investment = portfolio.getInvestment(cryptoId);
+                if (investment != null) {
+                    double quantity = investment.getQuantity();
+                    String quantityStr = String.format(Locale.US, "Holdings: %.8f %s ($%.2f)", 
+                                                    quantity, cryptoId, quantity * currentPrice);
+                    
+                    // Update UI instead of showing toast
+                    TextView holdingsView = getView().findViewById(R.id.tvHoldings);
+                    if (holdingsView != null) {
+                        holdingsView.setText(quantityStr);
+                        holdingsView.setVisibility(View.VISIBLE);
+                    }
+                }
+            } else {
+                // No holdings for this crypto
                 TextView holdingsView = getView().findViewById(R.id.tvHoldings);
                 if (holdingsView != null) {
-                    holdingsView.setText(quantityStr);
+                    holdingsView.setText("No holdings");
                     holdingsView.setVisibility(View.VISIBLE);
                 }
             }
-        } else {
-            // No holdings
-            TextView holdingsView = getView().findViewById(R.id.tvHoldings);
-            if (holdingsView != null) {
-                holdingsView.setText("No holdings");
-                holdingsView.setVisibility(View.VISIBLE);
-            }
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error updating holdings display: " + e.getMessage());
         }
     }
     
@@ -309,6 +346,19 @@ public class CryptoFragment extends Fragment {
                 TextView titleView = getView().findViewById(R.id.tvBitcoinTitle);
                 if (titleView != null) {
                     titleView.setText(cryptoNames[position] + " (" + supportedCryptos[position] + ")");
+                }
+                
+                // Update the trade amount section
+                TextView cryptoSymbolView = getView().findViewById(R.id.tvCryptoSymbol);
+                if (cryptoSymbolView != null) {
+                    cryptoSymbolView.setText(supportedCryptos[position]);
+                }
+                
+                // Update the input hint
+                com.google.android.material.textfield.TextInputLayout amountInputLayout = 
+                    getView().findViewById(R.id.amountInputLayout);
+                if (amountInputLayout != null) {
+                    amountInputLayout.setHint("Enter " + supportedCryptos[position] + " amount");
                 }
                 
                 // Set up price update listener for the selected cryptocurrency using BybitUpdateClient
@@ -590,72 +640,97 @@ public class CryptoFragment extends Fragment {
     }
     
     private void fetchCryptoData() {
+        if (!isAdded() || getContext() == null) {
+            Log.d("CryptoFragment", "Cannot fetch crypto data: fragment not attached");
+            return;
+        }
+        
         showLoading(true);
         
         // We need to fetch the data on a background thread since getCurrentPrice is synchronous
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Get the current price from BybitApiClient
-                    final double price = BybitApiClient.getInstance().getCurrentPrice(currentCryptoId);
-                    
-                    // Get the 24h change from BybitApiClient (or 0 if not available)
-                    final double change = BybitApiClient.getInstance().getCachedChange(currentCryptoId) != null ?
-                            BybitApiClient.getInstance().getCachedChange(currentCryptoId) : 0.0;
-                    
-                    // Update UI on the main thread
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isAdded() && getContext() != null) {
-                                updatePriceDisplay(price, change);
-                                showLoading(false);
-                            }
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Get the current price from BybitApiClient
+                        final double price = BybitApiClient.getInstance().getCurrentPrice(currentCryptoId);
+                        
+                        // Get the 24h change from BybitApiClient (or 0 if not available)
+                        final double change = BybitApiClient.getInstance().getCachedChange(currentCryptoId) != null ?
+                                BybitApiClient.getInstance().getCachedChange(currentCryptoId) : 0.0;
+                        
+                        // Update UI on the main thread
+                        if (mainHandler != null) {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isAdded() && getContext() != null) {
+                                        updatePriceDisplay(price, change);
+                                        showLoading(false);
+                                    } else {
+                                        Log.d("CryptoFragment", "Cannot update UI: fragment not attached");
+                                    }
+                                }
+                            });
                         }
-                    });
-                } catch (Exception e) {
-                    // Handle errors on the main thread
-                    mainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isAdded() && getContext() != null) {
-                                Log.e("CryptoFragment", "Error fetching price: " + e.getMessage());
-                                showToast("Error fetching price data", Toast.LENGTH_SHORT);
-                                showLoading(false);
-                            }
+                    } catch (Exception e) {
+                        Log.e("CryptoFragment", "Error fetching price: " + e.getMessage());
+                        // Handle errors on the main thread
+                        if (mainHandler != null) {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isAdded() && getContext() != null) {
+                                        showToast("Error fetching price data", Toast.LENGTH_SHORT);
+                                        showLoading(false);
+                                    }
+                                }
+                            });
                         }
-                    });
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            showLoading(false);
+            Log.e("CryptoFragment", "ExecutorService is null or shutdown");
+        }
     }
     
     private void updatePriceDisplay(double price, double change) {
         // Only update if this is for our current cryptocurrency
         if (!isAdded() || getContext() == null) {
+            Log.d("CryptoFragment", "Cannot update price display: fragment not attached");
             return;
         }
         
-        // Use NumberFormat for currency display
-        String formattedPrice = currencyFormat.format(price);
-        tvPrice.setText(formattedPrice);
-        
-        // Format the 24h change
-        String changeFormat = change >= 0 ? "+%.2f%%" : "%.2f%%";
-        String formattedChange = String.format(Locale.US, changeFormat, change);
-        tvChange.setText(formattedChange);
-        
-        // Set color based on positive or negative change
-        int color = change >= 0 ? Color.parseColor("#4CAF50") : Color.parseColor("#F44336");
-        tvChange.setTextColor(color);
-        
-        // Animate price changes to make them more noticeable
-        animatePriceChange(price);
-        
-        // Also update holdings display for this cryptocurrency
-        updateHoldingsDisplay(currentCryptoId, price);
-        showLoading(false);
+        try {
+            // Use NumberFormat for currency display
+            String formattedPrice = currencyFormat.format(price);
+            if (tvPrice != null) {
+                tvPrice.setText(formattedPrice);
+            }
+            
+            // Format the 24h change
+            String changeFormat = change >= 0 ? "+%.2f%%" : "%.2f%%";
+            String formattedChange = String.format(Locale.US, changeFormat, change);
+            if (tvChange != null) {
+                tvChange.setText(formattedChange);
+                
+                // Set color based on positive or negative change
+                int color = change >= 0 ? Color.parseColor("#4CAF50") : Color.parseColor("#F44336");
+                tvChange.setTextColor(color);
+            }
+            
+            // Animate price changes to make them more noticeable
+            animatePriceChange(price);
+            
+            // Also update holdings display for this cryptocurrency
+            updateHoldingsDisplay(currentCryptoId, price);
+            showLoading(false);
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error updating price display: " + e.getMessage());
+        }
     }
     
     /**
@@ -663,49 +738,107 @@ public class CryptoFragment extends Fragment {
      * @param newPrice The new price to animate to
      */
     private void animatePriceChange(final double newPrice) {
-        // Get the current price text
-        String currentText = tvPrice.getText().toString();
-        
-        // Use the animateTextChange method to update the price text
-        animateTextChange(tvPrice, currencyFormat.format(newPrice));
-    }
-    
-    private void animateTextChange(final TextView textView, final String newText) {
-        ValueAnimator fadeOut = ValueAnimator.ofFloat(1.0f, 0.5f);
-        fadeOut.setDuration(150);
-        fadeOut.addUpdateListener(animator -> textView.setAlpha((float) animator.getAnimatedValue()));
-        fadeOut.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                textView.setText(newText);
-                ValueAnimator fadeIn = ValueAnimator.ofFloat(0.5f, 1.0f);
-                fadeIn.setDuration(150);
-                fadeIn.addUpdateListener(animator -> textView.setAlpha((float) animator.getAnimatedValue()));
-                fadeIn.start();
-            }
-        });
-        fadeOut.start();
-    }
-    
-    private void showLoading(boolean show) {
-        // Check if fragment is attached to context to prevent crashes
         if (!isAdded() || getContext() == null) {
             return;
         }
         
-        if (progressBar != null) {
-            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        try {
+            // Check if the TextView is available
+            if (tvPrice == null) {
+                return;
+            }
+            
+            // Get the current price text
+            String currentText = tvPrice.getText().toString();
+            
+            // Use the animateTextChange method to update the price text
+            animateTextChange(tvPrice, currencyFormat.format(newPrice));
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error in animatePriceChange: " + e.getMessage());
+            // Fallback to direct update without animation
+            if (tvPrice != null) {
+                tvPrice.setText(currencyFormat.format(newPrice));
+            }
+        }
+    }
+    
+    private void animateTextChange(final TextView textView, final String newText) {
+        if (textView == null || !isAdded()) {
+            return;
+        }
+        
+        try {
+            ValueAnimator fadeOut = ValueAnimator.ofFloat(1.0f, 0.5f);
+            fadeOut.setDuration(150);
+            fadeOut.addUpdateListener(animator -> {
+                if (textView != null && isAdded()) {
+                    textView.setAlpha((float) animator.getAnimatedValue());
+                }
+            });
+            fadeOut.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (textView != null && isAdded()) {
+                        textView.setText(newText);
+                        ValueAnimator fadeIn = ValueAnimator.ofFloat(0.5f, 1.0f);
+                        fadeIn.setDuration(150);
+                        fadeIn.addUpdateListener(animator -> {
+                            if (textView != null && isAdded()) {
+                                textView.setAlpha((float) animator.getAnimatedValue());
+                            }
+                        });
+                        fadeIn.start();
+                    }
+                }
+            });
+            fadeOut.start();
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error in animateTextChange: " + e.getMessage());
+            // Fallback to direct update without animation
+            if (textView != null) {
+                textView.setText(newText);
+            }
+        }
+    }
+    
+    private void showLoading(boolean show) {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
+        
+        try {
+            if (progressBar != null) {
+                progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error in showLoading: " + e.getMessage());
         }
     }
     
     @Override
     public void onDestroy() {
-        executorService.shutdown();
-        // No need to explicitly untrack coins with CoinGeckoUpdateClient
-        // It will be handled when the instance is garbage collected
-        if (updateHandler != null && updateRunnable != null) {
-            updateHandler.removeCallbacks(updateRunnable);
-        }
         super.onDestroy();
+        // Cleanup resources
+        try {
+            if (executorService != null && !executorService.isShutdown()) {
+                executorService.shutdown();
+            }
+            
+            // Clear any pending handlers
+            if (mainHandler != null) {
+                mainHandler.removeCallbacksAndMessages(null);
+            }
+            
+            if (updateHandler != null) {
+                updateHandler.removeCallbacksAndMessages(null);
+            }
+            
+            // Stop tracking all symbols in Bybit client
+            if (updateClient != null) {
+                updateClient.untrackAllSymbols();
+            }
+        } catch (Exception e) {
+            Log.e("CryptoFragment", "Error in onDestroy: " + e.getMessage());
+        }
     }
 } 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Background gradient -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M0,0h24v24h-24z" />
+
+    <!-- Network Lines -->
+    <path
+        android:pathData="M5,17L12,5L19,17L12,13L5,17Z
+                          M5,17L12,13L19,17Z"
+        android:strokeColor="#B6FF00"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Network Nodes -->
+    <path
+        android:pathData="M5,17m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+        android:fillColor="#00FF7F" />
+    <path
+        android:pathData="M12,5m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+        android:fillColor="#00FF7F" />
+    <path
+        android:pathData="M19,17m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+        android:fillColor="#00FF7F" />
+    <path
+        android:pathData="M12,13m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+        android:fillColor="#B6FF00" />
+</vector>

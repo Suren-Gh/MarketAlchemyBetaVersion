@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Small particles -->
+    <item>
+        <shape android:shape="oval">
+            <size android:width="2dp" android:height="2dp" />
+            <solid android:color="@color/glow_green" />
+        </shape>
+    </item>
+    <!-- Medium particles scattered -->
+    <item android:left="50dp" android:top="30dp">
+        <shape android:shape="oval">
+            <size android:width="4dp" android:height="4dp" />
+            <solid android:color="@color/secondary" />
+        </shape>
+    </item>
+    <item android:left="120dp" android:top="80dp">
+        <shape android:shape="oval">
+            <size android:width="3dp" android:height="3dp" />
+            <solid android:color="@color/primary" />
+        </shape>
+    </item>
+    <item android:left="200dp" android:top="150dp">
+        <shape android:shape="oval">
+            <size android:width="5dp" android:height="5dp" />
+            <solid android:color="@color/glow_green" />
+        </shape>
+    </item>
+    <item android:left="70dp" android:top="200dp">
+        <shape android:shape="oval">
+            <size android:width="3dp" android:height="3dp" />
+            <solid android:color="@color/secondary" />
+        </shape>
+    </item>
+    <item android:left="180dp" android:top="50dp">
+        <shape android:shape="oval">
+            <size android:width="2dp" android:height="2dp" />
+            <solid android:color="@color/primary" />
+        </shape>
+    </item>
+</layer-list>

@@ -28,6 +28,7 @@
                 android:padding="4dp" />
 
             <TextView
+                android:id="@+id/textCryptoTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -196,6 +197,7 @@
                 android:padding="16dp">
                 
                 <TextView
+                    android:id="@+id/textAboutTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="About Bitcoin"
